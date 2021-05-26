@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -29,5 +30,9 @@ public class UserService {
         String encodedSalt = Base64.getEncoder().encodeToString(salt);
         String hashedPassword = hashService.getHashedValue(user.getPassword(), encodedSalt);
         return userMapper.insert(new User(user.getUsername(), encodedSalt, hashedPassword, user.getFirstName(), user.getLastName()));
+    }
+
+    public User getUser(String userName) {
+        return userMapper.getUser(userName);
     }
 }
