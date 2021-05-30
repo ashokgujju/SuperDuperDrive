@@ -46,6 +46,7 @@ public class CredentialService {
         if (credentialForm.getCredentialId() == null) {
             return credentialMapper.saveCredential(credential);
         } else {
+            credential.setCredentialId(credentialForm.getCredentialId());
             return credentialMapper.updateCredential(credential);
         }
     }

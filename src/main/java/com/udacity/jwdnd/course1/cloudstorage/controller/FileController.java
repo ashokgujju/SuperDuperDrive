@@ -10,8 +10,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/file")
@@ -26,16 +29,24 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public String uploadFile(Authentication authentication, @RequestParam("fileUpload") MultipartFile file) {
+    public String uploadFile(Authentication authentication, @RequestParam("fileUpload") MultipartFile file, Model model) {
         Integer userId = userService.getUser(authentication.getName()).getUserId();
-        fileService.saveFile(userId, file);
-        return "redirect:/home";
+        try {
+            boolean status = fileService.saveFile(userId, file) > 0;
+            model.addAttribute("isSuccess", status);
+        } catch (IOException e) {
+            e.printStackTrace();
+            model.addAttribute("isSuccess", false);
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+        return "result";
     }
 
     @GetMapping("/delete/{fileId}")
-    public String deleteFile(@PathVariable("fileId") String fileId) {
-        fileService.deleteFile(Integer.parseInt(fileId));
-        return "redirect:/home";
+    public String deleteFile(@PathVariable("fileId") String fileId, Model model) {
+        boolean status = fileService.deleteFile(Integer.parseInt(fileId)) > 0;
+        model.addAttribute("isSuccess", status);
+        return "result";
     }
 
     @GetMapping("/download/{fileId}")

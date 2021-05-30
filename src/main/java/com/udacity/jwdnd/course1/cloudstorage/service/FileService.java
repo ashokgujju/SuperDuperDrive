@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class FileService {
 
-    private FileMapper fileMapper;
+    private final FileMapper fileMapper;
 
     public FileService(FileMapper fileMapper) {
         this.fileMapper = fileMapper;
@@ -21,17 +21,13 @@ public class FileService {
         return fileMapper.getAllFilesByUserId(userId);
     }
 
-    public Integer saveFile(Integer userId, MultipartFile multipartFile) {
+    public Integer saveFile(Integer userId, MultipartFile multipartFile) throws IOException {
         File file = new File();
         file.setFileName(multipartFile.getOriginalFilename());
         file.setContentType(multipartFile.getContentType());
         file.setFileSize(String.valueOf(multipartFile.getSize()));
         file.setUserId(userId);
-        try {
-            file.setFileData(multipartFile.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        file.setFileData(multipartFile.getBytes());
 
         return fileMapper.saveFile(file);
     }

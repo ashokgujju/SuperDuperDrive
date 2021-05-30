@@ -19,24 +19,20 @@ public class NoteService {
         return noteMapper.getAllNotesByUserId(userId);
     }
 
-    public int createNote(NoteForm noteForm) {
+    public int saveNote(NoteForm noteForm) {
         Note note = new Note();
         note.setNoteTitle(noteForm.getNoteTitle());
         note.setNoteDescription(noteForm.getNoteDescription());
         note.setUserId(noteForm.getUserId());
-        return noteMapper.createNote(note);
+        if (noteForm.getNoteId() == null) {
+            return noteMapper.createNote(note);
+        } else {
+            note.setNoteId(noteForm.getNoteId());
+            return noteMapper.updateNote(note);
+        }
     }
 
-    public int updateNote(NoteForm noteForm) {
-        Note note = new Note();
-        note.setNoteId(noteForm.getNoteId());
-        note.setNoteTitle(noteForm.getNoteTitle());
-        note.setNoteDescription(noteForm.getNoteDescription());
-        note.setUserId(noteForm.getUserId());
-        return noteMapper.updateNote(note);
-    }
-
-    public void deleteNote(Integer noteId) {
-        noteMapper.deleteNote(noteId);
+    public int deleteNote(Integer noteId) {
+        return noteMapper.deleteNote(noteId);
     }
 }
