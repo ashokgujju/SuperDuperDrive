@@ -31,11 +31,7 @@ public class CredentialController {
     public String postCredential(Authentication authentication, CredentialForm credentialForm) {
         Integer userId = userService.getUser(authentication.getName()).getUserId();
         credentialForm.setUserId(userId);
-        if (credentialForm.getCredentialId() == null) {
-            credentialService.saveCredential(credentialForm);
-        } else {
-            credentialService.updateCredential(credentialForm);
-        }
+        credentialService.saveCredential(credentialForm);
 
         return "redirect:/home";
     }

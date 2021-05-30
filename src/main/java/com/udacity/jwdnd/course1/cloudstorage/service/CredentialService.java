@@ -5,41 +5,49 @@ import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.CredentialForm;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CredentialService {
-    private CredentialMapper credentialMapper;
 
-    public CredentialService(CredentialMapper credentialMapper) {
+    private final CredentialMapper credentialMapper;
+    private final EncryptionService encryptionService;
+
+    public CredentialService(CredentialMapper credentialMapper, EncryptionService encryptionService) {
         this.credentialMapper = credentialMapper;
+        this.encryptionService = encryptionService;
     }
 
     public List<Credential> getAllCredentials() {
-        return credentialMapper.getAllCredentials();
+        return credentialMapper.getAllCredentials()
+                .stream()
+                .peek(credential -> {
+                    String decryptedPassword = encryptionService.decryptValue(credential.getPassword(), credential.getKey());
+                    credential.setPassword(decryptedPassword);
+                }).collect(Collectors.toList());
     }
 
-    public int saveCredential(CredentialForm credentialForm) {
+    public Integer saveCredential(CredentialForm credentialForm) {
+        SecureRandom random = new SecureRandom();
+        byte[] key = new byte[16];
+        random.nextBytes(key);
+        String encodedKey = Base64.getEncoder().encodeToString(key);
+
         Credential credential = new Credential();
         credential.setUrl(credentialForm.getUrl());
-        credential.setKey("ashok"); //KEY
+        credential.setKey(encodedKey);
         credential.setUsername(credentialForm.getUsername());
-        credential.setPassword(credentialForm.getPassword()); // hash it
+        credential.setPassword(encryptionService.encryptValue(credentialForm.getPassword(), encodedKey));
         credential.setUserId(credentialForm.getUserId());
 
-        return credentialMapper.saveCredential(credential);
-    }
-
-    public Integer updateCredential(CredentialForm credentialForm) {
-        Credential credential = new Credential();
-        credential.setCredentialId(credentialForm.getCredentialId());
-        credential.setUrl(credentialForm.getUrl());
-        credential.setKey("ashok"); //KEY
-        credential.setUsername(credentialForm.getUsername());
-        credential.setPassword(credentialForm.getPassword()); // hash it
-        credential.setUserId(credentialForm.getUserId());
-
-        return credentialMapper.updateCredential(credential);
+        if (credentialForm.getCredentialId() == null) {
+            return credentialMapper.saveCredential(credential);
+        } else {
+            return credentialMapper.updateCredential(credential);
+        }
     }
 
     public Integer deleteCredential(Integer credentialId) {
