@@ -17,29 +17,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.ArrayList;
 
 @Controller
-@RequestMapping("/home")
+@RequestMapping("/credential")
 public class CredentialController {
-    private CredentialService credentialService;
-    private UserService userService;
-    private FileService fileService;
+    private final CredentialService credentialService;
+    private final UserService userService;
 
-    public CredentialController(CredentialService credentialService, UserService userService, FileService fileService) {
+    public CredentialController(CredentialService credentialService, UserService userService) {
         this.credentialService = credentialService;
         this.userService = userService;
-        this.fileService = fileService;
-    }
-
-    @GetMapping
-    public String homeView(NoteForm noteForm, CredentialForm credentialForm, Model model) {
-        model.addAttribute("notes", new ArrayList<Note>());
-        model.addAttribute("credentials", credentialService.getAllCredentials());
-        model.addAttribute("files", fileService.getAllFiles());
-        return "home";
     }
 
     @PostMapping
-    public String postCredential(Authentication authentication, NoteForm noteForm, CredentialForm credentialForm,
-                                 Model model) {
+    public String postCredential(Authentication authentication, CredentialForm credentialForm) {
         Integer userId = userService.getUser(authentication.getName()).getUserId();
         credentialForm.setUserId(userId);
         if (credentialForm.getCredentialId() == null) {
@@ -48,12 +37,10 @@ public class CredentialController {
             credentialService.updateCredential(credentialForm);
         }
 
-        model.addAttribute("notes", new ArrayList<Note>());
-        model.addAttribute("credentials", credentialService.getAllCredentials());
-        return "home";
+        return "redirect:/home";
     }
 
-    @GetMapping("/delete-credential/{credentialId}")
+    @GetMapping("/delete/{credentialId}")
     public String deleteCredential(@PathVariable("credentialId") String credentialId) {
         credentialService.deleteCredential(Integer.parseInt(credentialId));
         return "redirect:/home";
