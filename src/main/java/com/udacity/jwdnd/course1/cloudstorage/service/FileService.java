@@ -17,8 +17,8 @@ public class FileService {
         this.fileMapper = fileMapper;
     }
 
-    public List<File> getAllFiles() {
-        return fileMapper.getAllFiles();
+    public List<File> getAllFilesByUserId(Integer userId) {
+        return fileMapper.getAllFilesByUserId(userId);
     }
 
     public Integer saveFile(Integer userId, MultipartFile multipartFile) {

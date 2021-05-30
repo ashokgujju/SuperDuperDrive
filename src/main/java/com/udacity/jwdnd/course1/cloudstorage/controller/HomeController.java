@@ -5,6 +5,8 @@ import com.udacity.jwdnd.course1.cloudstorage.model.NoteForm;
 import com.udacity.jwdnd.course1.cloudstorage.service.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.service.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.service.NoteService;
+import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,18 +19,24 @@ public class HomeController {
     private final NoteService noteService;
     private final CredentialService credentialService;
     private final FileService fileService;
+    private final UserService userService;
 
-    public HomeController(NoteService noteService, CredentialService credentialService, FileService fileService) {
+    public HomeController(NoteService noteService, CredentialService credentialService,
+                          FileService fileService, UserService userService) {
         this.noteService = noteService;
         this.credentialService = credentialService;
         this.fileService = fileService;
+        this.userService = userService;
     }
 
     @GetMapping
-    public String homeView(NoteForm noteForm, CredentialForm credentialForm, Model model) {
-        model.addAttribute("notes", noteService.getAllNotes());
-        model.addAttribute("credentials", credentialService.getAllCredentials());
-        model.addAttribute("files", fileService.getAllFiles());
+    public String homeView(Authentication authentication, NoteForm noteForm, CredentialForm credentialForm, Model model) {
+        Integer userId = userService.getUser(authentication.getName()).getUserId();
+
+        model.addAttribute("notes", noteService.getAllNotesByUserId(userId));
+        model.addAttribute("credentials", credentialService.getAllCredentialsByUserId(userId));
+        model.addAttribute("files", fileService.getAllFilesByUserId(userId));
+
         return "home";
     }
 }

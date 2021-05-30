@@ -21,8 +21,8 @@ public class CredentialService {
         this.encryptionService = encryptionService;
     }
 
-    public List<Credential> getAllCredentials() {
-        return credentialMapper.getAllCredentials()
+    public List<Credential> getAllCredentialsByUserId(Integer userId) {
+        return credentialMapper.getAllCredentialsByUserId(userId)
                 .stream()
                 .peek(credential -> {
                     String decryptedPassword = encryptionService.decryptValue(credential.getPassword(), credential.getKey());
