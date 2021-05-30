@@ -4,6 +4,7 @@ import com.udacity.jwdnd.course1.cloudstorage.model.CredentialForm;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.NoteForm;
 import com.udacity.jwdnd.course1.cloudstorage.service.CredentialService;
+import com.udacity.jwdnd.course1.cloudstorage.service.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -20,16 +21,19 @@ import java.util.ArrayList;
 public class CredentialController {
     private CredentialService credentialService;
     private UserService userService;
+    private FileService fileService;
 
-    public CredentialController(CredentialService credentialService, UserService userService) {
+    public CredentialController(CredentialService credentialService, UserService userService, FileService fileService) {
         this.credentialService = credentialService;
         this.userService = userService;
+        this.fileService = fileService;
     }
 
     @GetMapping
     public String homeView(NoteForm noteForm, CredentialForm credentialForm, Model model) {
         model.addAttribute("notes", new ArrayList<Note>());
         model.addAttribute("credentials", credentialService.getAllCredentials());
+        model.addAttribute("files", fileService.getAllFiles());
         return "home";
     }
 
