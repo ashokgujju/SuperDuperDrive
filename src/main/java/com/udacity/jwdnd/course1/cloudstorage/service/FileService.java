@@ -39,4 +39,8 @@ public class FileService {
     public Integer deleteFile(Integer fileId) {
         return fileMapper.deleteFile(fileId);
     }
+
+    public Boolean isAnyFileWithSameNameAlreadyUploadedByUser(String fileName, Integer userId) {
+        return fileMapper.getFileByName(fileName, userId) != null;
+    }
 }

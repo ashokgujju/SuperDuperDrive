@@ -31,13 +31,20 @@ public class FileController {
     @PostMapping("/upload")
     public String uploadFile(Authentication authentication, @RequestParam("fileUpload") MultipartFile file, Model model) {
         Integer userId = userService.getUser(authentication.getName()).getUserId();
-        try {
-            boolean status = fileService.saveFile(userId, file) > 0;
-            model.addAttribute("isSuccess", status);
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        if (fileService.isAnyFileWithSameNameAlreadyUploadedByUser(file.getOriginalFilename(), userId)) {
             model.addAttribute("isSuccess", false);
-            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("errorMessage", "File with name " + file.getOriginalFilename() + " is already uploaded. " +
+                    "Rename it and upload again.");
+        } else {
+            try {
+                boolean status = fileService.saveFile(userId, file) > 0;
+                model.addAttribute("isSuccess", status);
+            } catch (IOException e) {
+                e.printStackTrace();
+                model.addAttribute("isSuccess", false);
+                model.addAttribute("errorMessage", e.getMessage());
+            }
         }
         return "result";
     }
