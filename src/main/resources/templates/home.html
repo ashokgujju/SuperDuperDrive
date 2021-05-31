@@ -153,8 +153,10 @@
                         <tbody>
                         <tr th:each="credential: ${credentials}">
                             <td>
-                                <button class="btn btn-success" th:onclick="javascript:showCredentialModal([[${credential.credentialId}]],
-                                                [[${credential.url}]], [[${credential.username}]], [[${credential.password}]])"
+                                <button class="btn btn-success"
+                                        th:onclick="javascript:showCredentialModal([[${credential.credentialId}]],
+                                                [[${credential.url}]], [[${credential.username}]],
+                                                [[${encryptService.decryptValue(credential.password, credential.key)}]])"
                                         type="button">
                                     Edit
                                 </button>
@@ -239,6 +241,7 @@
                 $('#credential-password').val(password ? password : '');
                 $('#credentialModal').modal('show');
             }
+
 
 
 

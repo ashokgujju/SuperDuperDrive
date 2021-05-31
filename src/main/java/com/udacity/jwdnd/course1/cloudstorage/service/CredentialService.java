@@ -22,12 +22,7 @@ public class CredentialService {
     }
 
     public List<Credential> getAllCredentialsByUserId(Integer userId) {
-        return credentialMapper.getAllCredentialsByUserId(userId)
-                .stream()
-                .peek(credential -> {
-                    String decryptedPassword = encryptionService.decryptValue(credential.getPassword(), credential.getKey());
-                    credential.setPassword(decryptedPassword);
-                }).collect(Collectors.toList());
+        return credentialMapper.getAllCredentialsByUserId(userId);
     }
 
     public Integer saveCredential(CredentialForm credentialForm) {
