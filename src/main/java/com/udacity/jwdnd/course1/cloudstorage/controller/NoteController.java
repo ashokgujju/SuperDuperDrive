@@ -29,7 +29,7 @@ public class NoteController {
             model.addAttribute("errorMessage", "Note can't be saved as description exceed 1000 characters.");
         } else {
             Integer userId = userService.getUser(authentication.getName()).getUserId();
-            if (noteService.getNoteWithTitleAndDescription(userId,
+            if (noteService.getNoteByTitleAndDescription(userId,
                     noteForm.getNoteTitle(), noteForm.getNoteDescription()) != null) {
                 model.addAttribute("isSuccess", false);
                 model.addAttribute("errorMessage", "Note already available.");

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 public class NoteService {
-    private NoteMapper noteMapper;
+    private final NoteMapper noteMapper;
 
     public NoteService(NoteMapper noteMapper) {
         this.noteMapper = noteMapper;
@@ -36,7 +36,7 @@ public class NoteService {
         return noteMapper.deleteNote(noteId);
     }
 
-    public Note getNoteWithTitleAndDescription(Integer userId, String title, String description) {
-        return noteMapper.getNoteWithTitleAndDescription(userId, title, description);
+    public Note getNoteByTitleAndDescription(Integer userId, String title, String description) {
+        return noteMapper.getNoteByTitleAndDescription(userId, title, description);
     }
 }
