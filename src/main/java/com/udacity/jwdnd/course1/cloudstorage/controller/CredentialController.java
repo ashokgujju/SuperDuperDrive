@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 import com.udacity.jwdnd.course1.cloudstorage.model.CredentialForm;
 import com.udacity.jwdnd.course1.cloudstorage.service.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,15 +25,21 @@ public class CredentialController {
 
     @PostMapping
     public String postCredential(Authentication authentication, CredentialForm credentialForm, Model model) {
-        Integer userId = userService.getUser(authentication.getName()).getUserId();
-        if (credentialService.getCredentialByUrlAndUsername(userId,
-                credentialForm.getUrl(), credentialForm.getUsername()) != null) {
-            model.addAttribute("isSuccess", false);
-            model.addAttribute("errorMessage", "Credential already available.");
+        UrlValidator urlValidator = new UrlValidator();
+        if (urlValidator.isValid(credentialForm.getUrl())) {
+            Integer userId = userService.getUser(authentication.getName()).getUserId();
+            if (credentialService.getCredentialByUrlAndUsername(userId,
+                    credentialForm.getUrl(), credentialForm.getUsername()) != null) {
+                model.addAttribute("isSuccess", false);
+                model.addAttribute("errorMessage", "Credential already available.");
+            } else {
+                credentialForm.setUserId(userId);
+                boolean status = credentialService.saveCredential(credentialForm) > 0;
+                model.addAttribute("isSuccess", status);
+            }
         } else {
-            credentialForm.setUserId(userId);
-            boolean status = credentialService.saveCredential(credentialForm) > 0;
-            model.addAttribute("isSuccess", status);
+            model.addAttribute("isSuccess", false);
+            model.addAttribute("errorMessage", "Credential URL is invalid.");
         }
         return "result";
     }
