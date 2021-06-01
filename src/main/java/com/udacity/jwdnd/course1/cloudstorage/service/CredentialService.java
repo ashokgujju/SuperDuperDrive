@@ -48,4 +48,8 @@ public class CredentialService {
     public Integer deleteCredential(Integer credentialId) {
         return credentialMapper.deleteCredential(credentialId);
     }
+
+    public Credential getCredentialByUrlAndUsername(Integer userId, String url, String username) {
+        return credentialMapper.getCredentialByUrlAndUsername(userId, url, username);
+    }
 }

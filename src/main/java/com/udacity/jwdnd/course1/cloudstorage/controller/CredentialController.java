@@ -25,9 +25,15 @@ public class CredentialController {
     @PostMapping
     public String postCredential(Authentication authentication, CredentialForm credentialForm, Model model) {
         Integer userId = userService.getUser(authentication.getName()).getUserId();
-        credentialForm.setUserId(userId);
-        boolean status = credentialService.saveCredential(credentialForm) > 0;
-        model.addAttribute("isSuccess", status);
+        if (credentialService.getCredentialByUrlAndUsername(userId,
+                credentialForm.getUrl(), credentialForm.getUsername()) != null) {
+            model.addAttribute("isSuccess", false);
+            model.addAttribute("errorMessage", "Credential already available.");
+        } else {
+            credentialForm.setUserId(userId);
+            boolean status = credentialService.saveCredential(credentialForm) > 0;
+            model.addAttribute("isSuccess", status);
+        }
         return "result";
     }
 
