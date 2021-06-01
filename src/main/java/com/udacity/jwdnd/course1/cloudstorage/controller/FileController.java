@@ -32,10 +32,13 @@ public class FileController {
     public String uploadFile(Authentication authentication, @RequestParam("fileUpload") MultipartFile file, Model model) {
         Integer userId = userService.getUser(authentication.getName()).getUserId();
 
-        if (fileService.isAnyFileWithSameNameAlreadyUploadedByUser(file.getOriginalFilename(), userId)) {
+        if (file.getOriginalFilename().isEmpty()) {
+            model.addAttribute("isSuccess", false);
+            model.addAttribute("errorMessage", "Please select a file!");
+        } else if (fileService.isAnyFileWithSameNameAlreadyUploadedByUser(file.getOriginalFilename(), userId)) {
             model.addAttribute("isSuccess", false);
             model.addAttribute("errorMessage", "File with name " + file.getOriginalFilename() + " is already uploaded. " +
-                    "Rename it and upload again.");
+                    "Rename it   and upload again.");
         } else {
             try {
                 boolean status = fileService.saveFile(userId, file) > 0;
