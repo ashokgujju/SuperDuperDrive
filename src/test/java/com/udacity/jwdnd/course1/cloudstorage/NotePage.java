@@ -41,7 +41,7 @@ public class NotePage {
         PageFactory.initElements(webDriver, this);
     }
 
-    public void createNote(Note note) throws InterruptedException {
+    public void createNote(Note note){
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", addNewNoteButton);
 
         WebDriverWait wait = new WebDriverWait(driver, 5);
@@ -61,15 +61,16 @@ public class NotePage {
         return savedNoteDescription.getAttribute("innerHTML");
     }
 
-    public void updateNote(String title, String description) throws InterruptedException {
+    public void updateNote(String title, String description) {
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", savedNoteEditButton);
 
         WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.until(ExpectedConditions.visibilityOf(noteTitleField));
 
         noteTitleField.clear();
-        noteTitleField.sendKeys(title);
         noteDescriptionField.clear();
+
+        noteTitleField.sendKeys(title);
         noteDescriptionField.sendKeys(description);
 
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", noteSubmitButton);

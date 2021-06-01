@@ -66,7 +66,8 @@
                 </div>
             </div>
             <div aria-labelledby="nav-notes-tab" class="tab-pane fade" id="nav-notes" role="tabpanel">
-                <button class="btn btn-info float-right" id="create-new-note" onclick="showNoteModal()" style="margin: 0.25em;"
+                <button class="btn btn-info float-right" id="create-new-note" onclick="showNoteModal()"
+                        style="margin: 0.25em;"
                         type="button">
                     + Add a New Note
                 </button>
@@ -136,7 +137,7 @@
             </div>
             <div aria-labelledby="nav-credentials-tab" class="tab-pane fade" id="nav-credentials" role="tabpanel">
                 <button class="btn btn-info float-right" onclick="showCredentialModal()" style="margin: 0.25em;"
-                        type="button">
+                        id="create-new-credential" type="button">
                     + Add a New Credential
                 </button>
 
@@ -241,6 +242,7 @@
                 $('#credential-password').val(password ? password : '');
                 $('#credentialModal').modal('show');
             }
+
 
 
 

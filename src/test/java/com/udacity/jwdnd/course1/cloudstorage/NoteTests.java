@@ -70,7 +70,7 @@ class NoteTests {
 
     @Test
     @Order(1)
-    public void TestNoteCreationAndVerify() throws InterruptedException {
+    public void testNoteCreationAndVerify() {
         Note note = new Note();
         note.setNoteTitle("I am Groot");
         note.setNoteDescription("You're boring.");
@@ -84,7 +84,7 @@ class NoteTests {
 
     @Test
     @Order(2)
-    public void TestEditingNoteAndVerify() throws InterruptedException {
+    public void testEditingNoteAndVerify() {
         String previousTitle = notePage.getSavedNoteTitle();
         String previousDescription = notePage.getSavedNoteDescription();
 
@@ -104,7 +104,7 @@ class NoteTests {
 
     @Test
     @Order(3)
-    public void TestDeleteNoteAndVerify() {
+    public void testDeleteNoteAndVerify() {
         notePage.deleteNote();
 
         openNotesTab();
