@@ -1,6 +1,10 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
+import com.udacity.jwdnd.course1.cloudstorage.page.CredentialPage;
+import com.udacity.jwdnd.course1.cloudstorage.page.HomePage;
+import com.udacity.jwdnd.course1.cloudstorage.page.LoginPage;
+import com.udacity.jwdnd.course1.cloudstorage.page.SignupPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
@@ -27,6 +31,7 @@ public class CredentialTests {
     public String baseURL;
 
     private CredentialPage credentialPage;
+    private HomePage homePage;
 
     @BeforeAll
     public void beforeAll() {
@@ -35,6 +40,7 @@ public class CredentialTests {
         baseURL = "http://localhost:" + port;
 
         credentialPage = new CredentialPage(driver);
+        homePage = new HomePage(driver);
 
         String username = "starlord";
         String password = "milano";
@@ -59,7 +65,6 @@ public class CredentialTests {
 
     public void openCredentialsTab() {
         driver.get(baseURL + "/home");
-        HomePage homePage = new HomePage(driver);
         homePage.openCredentialsTab();
     }
 
@@ -70,7 +75,7 @@ public class CredentialTests {
 
     @Test
     @Order(1)
-    public void testCredentialCreationAndVerify() {
+    public void testCredentialCreation() {
         Credential credential = new Credential();
         credential.setUrl("https://github.com/");
         credential.setUsername("ashokgujju");
@@ -111,7 +116,7 @@ public class CredentialTests {
 
     @Test
     @Order(3)
-    public void testDeleteNoteAndVerify() {
+    public void testDeletingCredential() {
         credentialPage.deleteCredential();
 
         openCredentialsTab();

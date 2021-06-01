@@ -1,6 +1,10 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
+import com.udacity.jwdnd.course1.cloudstorage.page.HomePage;
+import com.udacity.jwdnd.course1.cloudstorage.page.LoginPage;
+import com.udacity.jwdnd.course1.cloudstorage.page.NotePage;
+import com.udacity.jwdnd.course1.cloudstorage.page.SignupPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
@@ -27,6 +31,7 @@ class NoteTests {
     public String baseURL;
 
     private NotePage notePage;
+    private HomePage homePage;
 
     @BeforeAll
     public void beforeAll() {
@@ -35,6 +40,7 @@ class NoteTests {
         baseURL = "http://localhost:" + port;
 
         notePage = new NotePage(driver);
+        homePage = new HomePage(driver);
 
         String username = "starlord";
         String password = "milano";
@@ -59,7 +65,6 @@ class NoteTests {
 
     public void openNotesTab() {
         driver.get(baseURL + "/home");
-        HomePage homePage = new HomePage(driver);
         homePage.openNotesTab();
     }
 
@@ -70,7 +75,7 @@ class NoteTests {
 
     @Test
     @Order(1)
-    public void testNoteCreationAndVerify() {
+    public void testNoteCreation() {
         Note note = new Note();
         note.setNoteTitle("I am Groot");
         note.setNoteDescription("You're boring.");
@@ -84,7 +89,7 @@ class NoteTests {
 
     @Test
     @Order(2)
-    public void testEditingNoteAndVerify() {
+    public void testEditingNote() {
         String previousTitle = notePage.getSavedNoteTitle();
         String previousDescription = notePage.getSavedNoteDescription();
 
@@ -104,7 +109,7 @@ class NoteTests {
 
     @Test
     @Order(3)
-    public void testDeleteNoteAndVerify() {
+    public void testDeletingNote() {
         notePage.deleteNote();
 
         openNotesTab();

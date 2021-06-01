@@ -1,16 +1,15 @@
-package com.udacity.jwdnd.course1.cloudstorage;
+package com.udacity.jwdnd.course1.cloudstorage.page;
 
-import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 public class HomePage {
-    @FindBy(css="#nav-notes-tab")
+    @FindBy(css = "#nav-notes-tab")
     private WebElement notesTab;
 
-    @FindBy(css="#nav-credentials-tab")
+    @FindBy(css = "#nav-credentials-tab")
     private WebElement credentialsTab;
 
     public HomePage(WebDriver webDriver) {
