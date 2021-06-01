@@ -24,10 +24,15 @@ public class NoteController {
 
     @PostMapping
     public String saveNote(Authentication authentication, NoteForm noteForm, Model model) {
-        Integer userId = userService.getUser(authentication.getName()).getUserId();
-        noteForm.setUserId(userId);
-        boolean status = noteService.saveNote(noteForm) > 0;
-        model.addAttribute("isSuccess", status);
+        if (noteForm.getNoteDescription().length() > 1000) {
+            model.addAttribute("isSuccess", false);
+            model.addAttribute("errorMessage", "Note can't be saved as description exceed 1000 characters.");
+        } else {
+            Integer userId = userService.getUser(authentication.getName()).getUserId();
+            noteForm.setUserId(userId);
+            boolean status = noteService.saveNote(noteForm) > 0;
+            model.addAttribute("isSuccess", status);
+        }
         return "result";
     }
 
